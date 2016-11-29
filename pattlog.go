@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"runtime"
 )
 
 const (
@@ -92,7 +93,13 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 			out.Write(piece)
 		}
 	}
-	out.WriteByte('\n')
+
+	// handles line endings
+	lineEnding := "\n"
+	if runtime.GOOS == "windows" {
+	    lineEnding = "\r\n"
+	}
+	out.Write([]byte(lineEnding))
 
 	return out.String()
 }
