@@ -49,6 +49,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
@@ -196,13 +197,13 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 	}
 
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	// pc, _, lineno, ok := runtime.Caller(2)
+	_, file, lineno, ok := runtime.Caller(2)
 	src := ""
 	if ok {
 		// src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
 		// Use the relative path
-		pathSlice := strings.Split(runtime.FuncForPC(pc).Name(), "/")
-		src = fmt.Sprintf("%s:%d", pathSlice[len(pathSlice)-1], lineno)
+		src = fmt.Sprintf("%s:%d", filepath.Base(file), lineno)
 	}
 
 	msg := format
@@ -243,13 +244,13 @@ func (log Logger) intLogc(lvl Level, closure func() string) {
 	}
 
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	// pc, _, lineno, ok := runtime.Caller(2)
+	_, file, lineno, ok := runtime.Caller(2)
 	src := ""
 	if ok {
 		// src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
 		// Use the relative path
-		pathSlice := strings.Split(runtime.FuncForPC(pc).Name(), "/")
-		src = fmt.Sprintf("%s:%d", pathSlice[len(pathSlice)-1], lineno)
+		src = fmt.Sprintf("%s:%d", filepath.Base(file), lineno)
 	}
 
 	// Make the log record
